@@ -1,0 +1,20 @@
+{
+    "name": "aileshe/upload",
+    "description": "file upload",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dejan",
+            "email": "673008865@qq.com"
+        }
+    ],
+    "require": {
+        "php":">=5.3"
+    },
+    "autoload": {
+        "psr-4":{
+            "Dj\\":"src/Upload"
+        }
+    }
+}
