@@ -117,7 +117,7 @@ Array
 
 ```
 ### $upload->save($storage, $filter, $host) 
-------------------
+
 > \- storage [string]
 
 上传文件到哪的存储路径
@@ -131,7 +131,7 @@ Array
 上传到服务器后文件的URL访问域名
 
 ### $upload->save($storage, $host) 
-------------------
+
 > \- storage [string]
 
 上传文件到哪的存储路径
