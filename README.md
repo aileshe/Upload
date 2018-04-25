@@ -242,7 +242,7 @@ $filelist = $upload->save('./upload', [
 ]);
 ```
 
-#### 6) 自定义返回文件URL的域名
+#### 6) 设置上传后返回文件URL的域名
 ```
 $upload = new \Dj\Upload();
 $filelist = $upload->save('./upload', 'img.sop6.com');
@@ -255,6 +255,21 @@ $filelist = $upload->save('./upload', [
     'mime'=>'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     'size'=>5242880
 ], 'img.sop6.com');
+```
+设置域名img.sop6.com后返回的上传结果如下(带 * 号那行)
+```
+Array
+(
+    [name] => 919ff6986614ada.jpg    // 上传时的原文件名
+    [ext] => jpg                     // 文件后缀名
+    [mime] => image/jpeg             // 文件MIME
+    [size] => 171635                 // 文件大小(单位:字节)
+    [savename] => 1524626782VGdnXS50.jpg    // 文件上传后在服务器上存储的名称
+    [savepath] => E:/WWW/composer/upload_dev/upload/1524626782VGdnXS50.jpg  // 上传到服务器的存储绝对路径
+    [url] => http://img.sop6.com/upload/1524626782VGdnXS50.jpg  // * 文件访问URL地址
+    [uri] => /upload/1524626782VGdnXS50.jpg                     // 文件访问URI地址
+    [md5] => 6308045756c126c8b823f4ade0bad77d                   // 文件MD5
+)
 ```
 
 # 联系方式
