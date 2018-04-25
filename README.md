@@ -154,7 +154,7 @@ Array()   | 上传文件成功
 -5        | token验证错误
 
 # 高级用法
-#### 1) 如何指定文件表单name, 默认是'file'
+#### 1) 设置文件表单name, 默认是'file'
 ```
 new \Dj\Upload('form-file-name');   # <input type="file" name="form-file-name"/>
 ```
