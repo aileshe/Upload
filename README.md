@@ -139,7 +139,7 @@ $upload = new \Dj\Upload();
 $upload->token('FFFX123456');  # 设置 token
 $filelist = $upload->save('./upload');
 
-或
+# 或
 
 $upload = new \Dj\Upload();
 $filelist = $upload->token('FFFX123456')->save('./upload');
@@ -152,7 +152,7 @@ $filelist = $upload->save('./upload', [
     'ext'=>'jpg,jpeg,png,gif'
 ]);
 
-或
+# 或
 
 $upload = new \Dj\Upload();
 $filelist = $upload->save('./upload', [
@@ -167,7 +167,7 @@ $filelist = $upload->save('./upload', [
     'mime'=>'image/jpeg,image/gif,image/bmp'
 ]);
 
-或
+# 或
 
 $upload = new \Dj\Upload();
 $filelist = $upload->save('./upload', [
@@ -176,8 +176,26 @@ $filelist = $upload->save('./upload', [
 ```
 
 5) 上传文件许可的大小限制
-
+```
+$upload = new \Dj\Upload();
+$filelist = $upload->save('./upload', [
+    'size'=>5242880
+]);
+```
 
 6) 自定义返回文件URL的域名
+```
+$upload = new \Dj\Upload();
+$filelist = $upload->save('./upload', 'img.sop6.com');
+
+# 如果有过滤参数还可以这样定义
+
+$upload = new \Dj\Upload();
+$filelist = $upload->save('./upload', [
+    'ext'=>'jpg,jpeg,png,gif',
+    'mime'=>'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'size'=>5242880
+], 'img.sop6.com');
+```
 
 # 联系方式
