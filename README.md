@@ -156,7 +156,7 @@ Array()   | 上传文件成功
 # 高级用法
 #### 1) 如何指定文件表单name, 默认是'file'
 ```
-new \Dj\Upload('form-file-name');
+new \Dj\Upload('form-file-name');   # <input type="file" name="form-file-name"/>
 ```
 
 #### 2) 开启 token验证
@@ -169,6 +169,14 @@ $filelist = $upload->save('./upload');
 
 $upload = new \Dj\Upload();
 $filelist = $upload->token('FFFX123456')->save('./upload');
+```
+同时在上传文件时要也要POST提交正确的token
+```
+<form action="upload.php" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="token" value="FFFX123456"/>
+    <input type="file" name="file"/>
+    <input type="submit" value="上传"/>
+</form>
 ```
 
 #### 3) 上传指定格式文件(通过后缀名方式限制)
