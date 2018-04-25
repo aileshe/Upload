@@ -128,19 +128,56 @@ Array()   | 上传文件成功
 -5        | token验证错误
 
 # 高级用法
-1) 指定文件表单name
+1) 如何指定文件表单name, 默认是'file'
+```
+new \Dj\Upload('form-file-name');
+```
 
-2) 开启 token验证设置
+2) 开启 token验证
+```
+$upload = new \Dj\Upload();
+$upload->token('FFFX123456');  # 设置 token
+$filelist = $upload->save('./upload');
+
+或
+
+$upload = new \Dj\Upload();
+$filelist = $upload->token('FFFX123456')->save('./upload');
+```
+
+3) 上传指定格式文件(通过后缀名方式限制)
+```
+$upload = new \Dj\Upload();
+$filelist = $upload->save('./upload', [
+    'ext'=>'jpg,jpeg,png,gif'
+]);
+
+或
+
+$upload = new \Dj\Upload();
+$filelist = $upload->save('./upload', [
+    'ext'=>['jpg','jpeg','png','gif']
+]);
+```
+
+4) 上传指定格式文件(通过MIME方式限制)
+```
+$upload = new \Dj\Upload();
+$filelist = $upload->save('./upload', [
+    'mime'=>'image/jpeg,image/gif,image/bmp'
+]);
+
+或
+
+$upload = new \Dj\Upload();
+$filelist = $upload->save('./upload', [
+    'mime'=>['image/jpeg','image/gif','image/bmp']
+]);
+```
+
+5) 上传文件许可的大小限制
 
 
-3) 限制上传指定格式的文件(后缀名方式)
-
-
-4) 限制上传指定格式的文件(MIME方式)
-
-
-5) 限制上传文件许可的大小
-
-6) 自定义返回文件ULR的域名
+6) 自定义返回文件URL的域名
 
 # 联系方式
