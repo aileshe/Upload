@@ -128,12 +128,12 @@ Array()   | 上传文件成功
 -5        | token验证错误
 
 # 高级用法
-1) 如何指定文件表单name, 默认是'file'
+#### 1) 如何指定文件表单name, 默认是'file'
 ```
 new \Dj\Upload('form-file-name');
 ```
 
-2) 开启 token验证
+#### 2) 开启 token验证
 ```
 $upload = new \Dj\Upload();
 $upload->token('FFFX123456');  # 设置 token
@@ -145,7 +145,7 @@ $upload = new \Dj\Upload();
 $filelist = $upload->token('FFFX123456')->save('./upload');
 ```
 
-3) 上传指定格式文件(通过后缀名方式限制)
+#### 3) 上传指定格式文件(通过后缀名方式限制)
 ```
 $upload = new \Dj\Upload();
 $filelist = $upload->save('./upload', [
@@ -160,7 +160,7 @@ $filelist = $upload->save('./upload', [
 ]);
 ```
 
-4) 上传指定格式文件(通过MIME方式限制)
+#### 4) 上传指定格式文件(通过MIME方式限制)
 ```
 $upload = new \Dj\Upload();
 $filelist = $upload->save('./upload', [
@@ -175,7 +175,7 @@ $filelist = $upload->save('./upload', [
 ]);
 ```
 
-5) 上传文件许可的大小限制
+#### 5) 上传文件许可的大小限制
 ```
 $upload = new \Dj\Upload();
 $filelist = $upload->save('./upload', [
@@ -208,7 +208,7 @@ $filelist = $upload->save('./upload', [
 ]);
 ```
 
-6) 自定义返回文件URL的域名
+#### 6) 自定义返回文件URL的域名
 ```
 $upload = new \Dj\Upload();
 $filelist = $upload->save('./upload', 'img.sop6.com');
