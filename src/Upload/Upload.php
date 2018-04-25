@@ -12,6 +12,7 @@ class Upload{
     public $ext = NULL;      # 允许上传文件的后缀(一维的索引数组)
     public $size = NULL;     # 允许上传文件的大小(int)
     public $mime = NULL;     # 允许上传文件的MIME(一维的索引数组)
+    public $host = NULL;     # 文件访问域名(http://www.a.com)
     
     /**
      * 文件接收入口 - 单文件、多文件上传
@@ -32,33 +33,33 @@ class Upload{
     }
     
     /**
-     * 过滤设置
-     * @param  Array   $filter   过滤规则 ['ext'=>'后缀名限制','size'=>193038] = ['ext'=>'png,jpg,gif','size'=>193038]
+     * 过滤允许设置
+     * @param  Array   $allow   过滤允许规则 ['ext'=>'后缀名限制','size'=>193038] = ['ext'=>'png,jpg,gif','size'=>193038]
      * @return ClassObject
      */
-    private function filter($filter){
-        if($filter != NULL){
+    private function allow($allow){
+        if($allow != NULL){
             # 文件格式过滤 - 文件后缀
-            if(isset($filter['ext']) && !empty($filter['ext'])){
-                if(is_array($filter['ext'])){
-                    $this->ext = $filter['ext'];
+            if(isset($allow['ext']) && !empty($allow['ext'])){
+                if(is_array($allow['ext'])){
+                    $this->ext = $allow['ext'];
                 }else{
-                    $this->ext = explode(',', $filter['ext']);
+                    $this->ext = explode(',', $allow['ext']);
                 }
             }
             
             # 文件格式过滤 - MIME
-            if(isset($filter['mime']) && !empty($filter['mime'])){
-                if(is_array($filter['mime'])){
-                    $this->mime = $filter['mime'];
+            if(isset($allow['mime']) && !empty($allow['mime'])){
+                if(is_array($allow['mime'])){
+                    $this->mime = $allow['mime'];
                 }else{
-                    $this->mime = explode(',', $filter['mime']);
+                    $this->mime = explode(',', $allow['mime']);
                 }
             }
             
             # 文件大小过滤
-            if(isset($filter['size']) && !empty($filter['size'])){
-                $this->size = (int)$filter['size'];
+            if(isset($allow['size']) && !empty($allow['size'])){
+                $this->size = (int)$allow['size'];
             }
         }
         return $this;
@@ -67,10 +68,11 @@ class Upload{
     /**
      * 文件接收入口 - 单文件、多文件上传
      * @param  String  $storage  文件存储路径
-     * @param  Array   $filter   过滤规则 ['ext'=>'后缀名限制','size'=>193038] = ['ext'=>'png,jpg,gif','size'=>193038]
+     * @param  Array   $allow    允许上传文件规则 ['ext'=>'后缀名限制','size'=>193038] = ['ext'=>'png,jpg,gif','size'=>193038]
+     * @param  String  $host     文件访问域名
      * @return Int  [0上传提交空文件  -1上传失败  -2文件存储路径不合法  -5验证token为空]
      */
-    public function save($storage = NULL, $filter = NULL){
+    public function save($storage = NULL, $allow = NULL, $host = NULL){
         # token 验证
         if($this->token != NULL){
             if(!isset($_POST['token']) || $_POST['token'] != $this->token){
@@ -83,8 +85,20 @@ class Upload{
             return -2;
         }
         
-        # 初始化过滤设置
-        $this->filter($filter);
+        # 初始化过滤设置, 如果$allow为字符串型时自动设置 $host = $allow
+        if(is_string($allow)){
+            $host = $allow;
+            $allow = NULL;
+        }else{
+            $this->allow($allow);
+        }
+        
+        # 初始化文件访问域名
+        if($host == NULL){
+            $this->host = 'http://'.$_SERVER['HTTP_HOST'];
+        }else{
+            $this->host = preg_match('/^http[s]?\:\/\//', $host)? $host : 'http://'.$host;
+        }
         
         if(!empty($_FILES) && isset($_FILES[$this->frm_name])){
             # 判断存储目录是否存在,无则自动创建
@@ -137,10 +151,13 @@ class Upload{
                 # - 上传文件回调数据信息
                 $new_arr['name']     = $filelist[0]['name']; # 文件上传时的原名称
                 $new_arr['ext']      = $ext; # 文件后缀名
-                $new_arr['savepath'] = $save_path.'/'.$fileName; # 文件存储绝对路径(包含文件名)
-                $new_arr['savename'] = $fileName; # 文件保存在服务器上名称
+                $new_arr['mime']     = $filelist[0]['type']; # 文件MIME
                 $new_arr['size']     = $filelist[0]['size']; # 文件大小(单位:字节)
-                $new_arr['md5']      = md5_file($save_path.'/'.$fileName); # 文件MD5
+                $new_arr['savename'] = $fileName; # 文件保存在服务器上名称
+                $new_arr['savepath'] = str_replace('\\', '/', $save_path.'/'.$fileName); # 文件存储绝对路径(包含文件名)
+                $new_arr['url']      = str_replace($_SERVER['DOCUMENT_ROOT'], $this->host, $new_arr['savepath']); # 文件访问URL地址
+                $new_arr['uri']      = str_replace($_SERVER['DOCUMENT_ROOT'], '', $new_arr['savepath']); # 文件访问URI相对地址
+                $new_arr['md5']      = md5_file($new_arr['savepath']); # 文件MD5
             }else{
                 # 多文件上传
                 foreach($filelist as $v){
@@ -149,13 +166,17 @@ class Upload{
                     move_uploaded_file($v['tmp_name'], $save_path.'/'.$fileName);
                 
                     # - 上传文件回调数据信息
+                    $savepath = str_replace('\\', '/', $save_path.'/'.$fileName);
                     $new_arr[] = array(
                     'name'     => $v['name'] , # 文件上传时的原名称
                     'ext'      => $ext ,       # 文件后缀名
-                    'savepath' => $save_path.'/'.$fileName , # 文件存储绝对路径(包含文件名)
-                    'savename' => $fileName ,  # 文件保存在服务器上名称
+                    'mime'     => $v['type'] , # 文件MIME
                     'size'     => $v['size'] , # 文件大小(单位:字节)
-                    'md5'      => md5_file($save_path.'/'.$fileName) # 文件MD5
+                    'savename' => $fileName ,  # 文件保存在服务器上名称
+                    'savepath' => $savepath , # 文件存储绝对路径(包含文件名)
+                    'url'      => str_replace($_SERVER['DOCUMENT_ROOT'], $this->host, $savepath) , # 文件访问URL地址
+                    'uri'      => str_replace($_SERVER['DOCUMENT_ROOT'], '', $savepath) , # 文件访问URI地址
+                    'md5'      => md5_file($savepath) # 文件MD5
                     );
                 }
             }
