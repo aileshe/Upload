@@ -124,7 +124,7 @@ Array
 
 > \- allow (optional) [array]
 
-文件上传过滤
+文件上传过滤允许规则定义
 
 > \- host (optional) [string]
 
