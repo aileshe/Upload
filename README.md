@@ -116,7 +116,20 @@ Array
 )
 
 ```
-### $upload->save($storage, $filter[可选], $host[可选]) 返回值参照:
+### $upload->save($storage, $filter[可选], $host[可选]) 
+> \- storage [string]
+
+上传文件到哪的存储路径
+
+> \- filter (optional) [array]
+
+文件上传过滤
+
+> \- host (optional) [string]
+
+上传到服务器后文件的URL访问域名
+
+返回值参照:
 
 返回值     |  说明
 :--------:|:----------:
