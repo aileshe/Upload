@@ -182,6 +182,31 @@ $filelist = $upload->save('./upload', [
     'size'=>5242880
 ]);
 ```
+同时"过滤参数"是可以混用的, 如 只想限制文件大小和文件类型、可以上传xx后缀的同时要匹配MIME等.. 都可以的大胆相信无所不能!
+```
+$upload = new \Dj\Upload();
+$filelist = $upload->save('./upload', [
+    'ext'=>'jpg,jpeg,png,gif',
+    'mime'=>'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'size'=>5242880
+]);
+
+# 或
+
+$upload = new \Dj\Upload();
+$filelist = $upload->save('./upload', [
+    'ext'=>'jpg,jpeg,png,gif',
+    'size'=>5242880
+]);
+
+# 或
+
+$upload = new \Dj\Upload();
+$filelist = $upload->save('./upload', [
+    'ext'=>'jpg,jpeg,png,gif',
+    'mime'=>'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+]);
+```
 
 6) 自定义返回文件URL的域名
 ```
@@ -199,3 +224,6 @@ $filelist = $upload->save('./upload', [
 ```
 
 # 联系方式
+Author: Dejan
+
+QQ: 673008865
