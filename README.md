@@ -116,13 +116,13 @@ Array
 )
 
 ```
-### $upload->save($storage, $filter, $host) 
+### $upload->save($storage, $allow, $host) 
 
 > \- storage [string]
 
 上传文件到哪的存储路径
 
-> \- filter (optional) [array]
+> \- allow (optional) [array]
 
 文件上传过滤
 
